@@ -1,50 +1,59 @@
-# RoadWatch AI - System Architecture & Data Flow
+# 🚦 RoadWatch AI - System Flow (INGRESS → INFERENCE → INSIGHTS)
 
-This document details the **Asynchronous Computer Vision & Geospatial Telemetry Pipeline** that powers RoadWatch AI.
-
-## 🚀 Architectural Blueprint
-
-The system utilizes a multi-stage lifecycle to transform raw visual telemetry into actionable infrastructure intelligence.
-
-```mermaid
-graph TD
-    subgraph S1 ["1. EDGE INFERENCE"]
-        CAM["Live Video Ingestion<br/>(Dashcam / Mobile Feed)"]
-        DET["YOLOv11 Inference Pipeline<br/>(Real-time Object Detection)"]
-    end
-
-    subgraph S2 ["2. SPATIO-TEMPORAL SYNTHESIS"]
-        GPS["Precision Geolocation Capture<br/>(Lat / Long Metadata)"]
-        GEO["Reverse Geocoding Layer<br/>(Google Maps API Envrichment)"]
-        API["RESTful API Gateway<br/>(Flask Payload Handling)"]
-    end
-
-    subgraph S3 ["3. ANALYTICS & PERSISTENCE"]
-        DB["Distributed NoSQL Persistence<br/>(MongoDB Cluster)"]
-        DASH["Real-time Telemetry Dashboard<br/>(Plotly Dash Visualization)"]
-    end
-
-    CAM -->|Frame Serialization| DET
-    DET -->|Detection Metadata| GPS
-    GPS -->|Enriched Coordinates| GEO
-    GEO -->|Structured Payload| API
-    API -->|Asynchronous Ingestion| DB
-    DB -->|Reactive Data Surface| DASH
-
-    style S1 fill:#f0f9ff,stroke:#0ea5e9,stroke-width:2px
-    style S2 fill:#f0fdf4,stroke:#22c55e,stroke-width:2px
-    style S3 fill:#fff7ed,stroke:#f97316,stroke-width:2px
-```
-
-## 🛠️ Technical Process Decomposition
-
-1.  **Computer Vision Ingestion**: Real-time video streams (dashcam or mobile) are fed into the high-performance YOLOv11 inference pipeline for localized defect detection.
-2.  **Inference & Classification**: Our optimized deep learning model identifies infrastructure hazards (potholes, cracks, etc.) with high precision and low edge latency.
-3.  **Spatio-Temporal Enrichment**: Detection events are instantly correlated with high-precision GPS telemetry, capturing the exact geographic coordinates of each infrastructure defect.
-4.  **Geographic Resolver**: Automated reverse geocoding via the Google Maps Platform translates raw coordinates into human-readable municipal addresses for actionable reporting.
-5.  **Asynchronous Data Ingestion**: Structured data payloads (hazard snapshots, location metadata, and severity rankings) are securely ingested via the Flask REST API.
-6.  **Distributed Persistence & Visualization**: Aggregated data is persisted in a MongoDB cluster and surfaced via a real-time Plotly Dash dashboard for interactive heatmapping and decision support.
+This document visualizes the **end-to-end data pipeline** of RoadWatch AI, transforming raw video input into actionable road intelligence.
 
 ---
 
-### **INGRESS → INFERENCE → INSIGHTS**
+## ⚡ Quick Understanding (10 sec)
+
+📥 **Ingress** → 🎯 **Inference** → 📊 **Insights**
+
+- Capture road video  
+- Detect hazards using AI  
+- Convert into geospatial insights  
+- Store + visualize in dashboard  
+
+---
+
+## 🔄 Full Pipeline Flowchart
+
+```mermaid
+flowchart LR
+
+    %% =========================
+    %% 🟦 STAGE 1: INGRESS
+    %% =========================
+    subgraph A["📥 INGRESS LAYER"]
+        CAM["📷 Video Source<br/>(Dashcam / Mobile / CCTV)"]
+    end
+
+    %% =========================
+    %% 🟩 STAGE 2: INFERENCE
+    %% =========================
+    subgraph B["🎯 INFERENCE LAYER"]
+        DET["🧠 YOLOv11 Detection Engine<br/>(Real-time Object Detection)"]
+        GPS["📍 GPS Tagging<br/>(Latitude / Longitude)"]
+        GEO["🌍 Reverse Geocoding<br/>(Google Maps API)"]
+    end
+
+    %% =========================
+    %% 🟧 STAGE 3: INSIGHTS
+    %% =========================
+    subgraph C["📊 INSIGHTS LAYER"]
+        API["🔗 Flask API<br/>(Data Processing Layer)"]
+        DB["🗄️ MongoDB<br/>(Data Storage)"]
+        DASH["📊 Dashboard<br/>(Plotly Dash Visualization)"]
+    end
+
+    %% Flow Connections
+    CAM -->|Frame Stream| DET
+    DET -->|Detection Data| GPS
+    GPS -->|Coordinates| GEO
+    GEO -->|Enriched Data| API
+    API -->|Async Storage| DB
+    DB -->|Live Data Feed| DASH
+
+    %% Styling
+    style A fill:#e0f2fe,stroke:#0284c7,stroke-width:2px
+    style B fill:#dcfce7,stroke:#16a34a,stroke-width:2px
+    style C fill:#ffedd5,stroke:#ea580c,stroke-width:2px
