@@ -29,9 +29,6 @@ import cv2
 from yolo_detect import detect_frame
 
 
-# ══════════════════════════════════════════════════════════════════════
-# HOME PAGE — Three.js 3D Command Center with Framer Motion
-# ══════════════════════════════════════════════════════════════════════
 HOME_PAGE_TEMPLATE = r"""
 <!doctype html>
 <html lang="en">
@@ -1396,10 +1393,7 @@ def _camera_context() -> dict:
     }
 
 
-# ══════════════════════════════════════════════════════════════════════
-# Flask Application Factory
-# ══════════════════════════════════════════════════════════════════════
-
+#Flask app
 
 def create_app() -> Flask:
     app = Flask(__name__)
